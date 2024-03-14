@@ -51,9 +51,52 @@ if(!defined('ABSPATH')) exit;
         //add column on user screen
         add_filter('manage_users_columns',[$this,'add_registration_column']);
         add_action('manage_users_custom_column',[$this,'show_registration_on_user'],10,3);
-
+        $this->add_custom_post_type();
         require_once plugin_dir_path(__FILE__).'query-data.php';
         new Query_data();
+    }
+
+    public function add_custom_post_type(){
+        /**
+         * Post Type: books.
+         */
+
+        $labels = [
+            "name" => esc_html__( "Books", "twentytwentyfour" ),
+            "singular_name" => esc_html__( "book", "twentytwentyfour" ),
+            "add_new" => esc_html__( "Add New Book", "twentytwentyfour" ),
+            "add_new_item" => esc_html__( "Add New Book", "twentytwentyfour" ),
+            "edit_item" => esc_html__( "Edit Book", "twentytwentyfour" ),
+        ];
+
+        $args = [
+            "label" => esc_html__( "books", "twentytwentyfour" ),
+            "labels" => $labels,
+            "description" => "",
+            "public" => true,
+            "publicly_queryable" => true,
+            "show_ui" => true,
+            "show_in_rest" => true,
+            "rest_base" => "",
+            "rest_controller_class" => "WP_REST_Posts_Controller",
+            "rest_namespace" => "wp/v2",
+            "has_archive" => true,
+            "show_in_menu" => true,
+            "show_in_nav_menus" => true,
+            "delete_with_user" => false,
+            "exclude_from_search" => false,
+            "capability_type" => "post",
+            "map_meta_cap" => true,
+            "hierarchical" => false,
+            "can_export" => false,
+            "rewrite" => [ "slug" => "books", "with_front" => true ],
+            "query_var" => true,
+            "supports" => [ "title", "editor", "thumbnail" ],
+            "show_in_graphql" => false,
+        ];
+
+        register_post_type( "books", $args );
+        
     }
 
     public function add_registration_column($columns) {
